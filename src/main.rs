@@ -23,7 +23,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Parse the response into a serde json Value struct and write the responses
     // out to the file.
     let v: Value = serde_json::from_str(&res_body)?;
-    println!("{:?}", v);
     let divider = b"\n___________________________\n";
     for choice in v["choices"].as_array().unwrap() {
         let choice_obj = choice.as_object().unwrap();
