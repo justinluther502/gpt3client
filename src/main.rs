@@ -61,13 +61,13 @@ fn build_post_payload() -> Value {
     let suffix = fs::read_to_string("suffix.txt").unwrap();
     let used_chars = prompt.chars().count() + suffix.chars().count();
     let used_tokens = 0.3 * used_chars as f32;
-    let max_tokens = 4093.0 - used_tokens;
+    let max_tokens = 4093 - used_tokens as u32;
     let post_data = json!({
         "model": "text-davinci-002",
         "prompt": prompt,
         "suffix": suffix,
-        "temperature": 0.8,
-        "max_tokens": max_tokens as u32,
+        "temperature": 0.6,
+        "max_tokens": max_tokens,
         "n": 3,
     });
     post_data
