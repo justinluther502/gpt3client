@@ -1,0 +1,10 @@
+[model]
+model = "text-davinci-002"
+temperature = 0.6
+choices = 3
+include_suffix = true
+
+[user]
+api_key_env_var = "OPEN_API_ACCESS_KEY"
+prompt_filename = "prompt.txt"
+suffix_filename = "suffix.txt"

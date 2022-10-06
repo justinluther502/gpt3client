@@ -1,16 +1,44 @@
 use reqwest::header::{CONTENT_TYPE, AUTHORIZATION};
 use std::{env, fs, io::Write};
 use serde_json::{json, Value};
+use serde_derive::Deserialize;
+
+#[derive(Deserialize)]
+struct Config {
+    model: ModelConfig,
+    user: UserConfig,
+}
+
+#[derive(Deserialize)]
+struct ModelConfig {
+    model: String,
+    temperature: f32,
+    choices: u32,
+    include_suffix: bool
+}
+
+#[derive(Deserialize)]
+struct UserConfig {
+    api_key_env_var: String,
+    prompt_filename: String,
+    suffix_filename: String
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Grab config from api_config.toml
+    let config_contents = fs::read_to_string("api_config.toml")
+        .expect("Could not read api_config.toml. Is it missing?");
+    
+    let config: Config = toml::from_str(&config_contents)
+        .expect("Couldn't parse api_config.toml.");
     
     // Build up the API request data
-    let post_data = build_post_payload();
+    let post_data = build_post_payload(&config.user, &config.model);
     let client = reqwest::Client::new();
     let res = client.post("https://api.openai.com/v1/completions")
         .header(CONTENT_TYPE, "application/json")
-        .header(AUTHORIZATION, build_auth_string())
+        .header(AUTHORIZATION, build_auth_string(&config.user.api_key_env_var))
         .json(&post_data)
         .send()
         .await?;
@@ -31,7 +59,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut file = fs::OpenOptions::new()
             .write(true)
             .append(true)
-            .open("prompt.txt")
+            .open(&config.user.prompt_filename)
             .unwrap();
         file.write_all(divider).unwrap();
         file.write_all(text.as_bytes()).unwrap();
@@ -41,34 +69,34 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut file = fs::OpenOptions::new()
         .write(true)
         .append(true)
-        .open("prompt.txt")
+        .open(&config.user.prompt_filename)
         .unwrap();
     file.write_all(divider).unwrap();
-    let suffix = fs::read("suffix.txt").unwrap();
+    let suffix = fs::read(&config.user.suffix_filename).unwrap();
     file.write_all(&suffix).unwrap();
     Ok(())
 }
 
-fn build_auth_string() -> String {
-    let api_key = env::var("OPEN_API_ACCESS_KEY").unwrap();
+fn build_auth_string(key_variable: &String) -> String {
+    let api_key = env::var(key_variable).unwrap();
     let mut auth_string = String::from("Bearer ");
     auth_string.push_str(&api_key);
     auth_string
 }
 
-fn build_post_payload() -> Value {
-    let prompt = fs::read_to_string("prompt.txt").unwrap();
-    let suffix = fs::read_to_string("suffix.txt").unwrap();
+fn build_post_payload(user_cfg: &UserConfig, model_cfg: &ModelConfig) -> Value {
+    let prompt = fs::read_to_string(&user_cfg.prompt_filename).unwrap();
+    let suffix = fs::read_to_string(&user_cfg.suffix_filename).unwrap();
     let used_chars = prompt.chars().count() + suffix.chars().count();
     let used_tokens = 0.3 * used_chars as f32;
     let max_tokens = 4093 - used_tokens as u32;
     let post_data = json!({
-        "model": "text-davinci-002",
+        "model": &model_cfg.model,
         "prompt": prompt,
         "suffix": suffix,
-        "temperature": 0.6,
+        "temperature": &model_cfg.temperature,
         "max_tokens": max_tokens,
-        "n": 3,
+        "n": &model_cfg.choices,
     });
     post_data
 }
