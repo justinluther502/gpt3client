@@ -29,7 +29,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Grab config from api_config.toml
     let config_contents = fs::read_to_string("api_config.toml")
         .expect("Could not read api_config.toml. Is it missing?");
-    
     let config: Config = toml::from_str(&config_contents)
         .expect("Couldn't parse api_config.toml.");
     
@@ -90,13 +89,24 @@ fn build_post_payload(user_cfg: &UserConfig, model_cfg: &ModelConfig) -> Value {
     let used_chars = prompt.chars().count() + suffix.chars().count();
     let used_tokens = 0.3 * used_chars as f32;
     let max_tokens = 4093 - used_tokens as u32;
-    let post_data = json!({
-        "model": &model_cfg.model,
-        "prompt": prompt,
-        "suffix": suffix,
-        "temperature": &model_cfg.temperature,
-        "max_tokens": max_tokens,
-        "n": &model_cfg.choices,
-    });
-    post_data
+    
+    // Return JSON, including suffix value based on model config value.
+    if model_cfg.include_suffix {
+        json!({
+            "model": &model_cfg.model,
+            "prompt": prompt,
+            "suffix": suffix,
+            "temperature": &model_cfg.temperature,
+            "max_tokens": max_tokens,
+            "n": &model_cfg.choices,
+        })
+    } else {
+        json!({
+            "model": &model_cfg.model,
+            "prompt": prompt,
+            "temperature": &model_cfg.temperature,
+            "max_tokens": max_tokens,
+            "n": &model_cfg.choices,
+        })
+    }
 }
