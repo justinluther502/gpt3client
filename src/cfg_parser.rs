@@ -26,7 +26,6 @@ pub fn parse_config() -> Config {
     // Grab config from api_config.toml
     let config_contents = fs::read_to_string("api_config.toml")
         .expect("Could not read api_config.toml. Is it missing?");
-    let config: Config = toml::from_str(&config_contents)
-        .expect("Couldn't parse api_config.toml.");
+    let config: Config = toml::from_str(&config_contents).expect("Couldn't parse api_config.toml.");
     config
 }

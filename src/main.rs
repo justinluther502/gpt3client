@@ -1,9 +1,11 @@
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_json::{Value};
-use std::{env, fs, io::Write};
+use serde_json::Value;
+use std::{fs, io::Write};
 
+mod api_auth;
 mod cfg_parser;
 mod post_payload;
+use api_auth::build_auth_string;
 use post_payload::build_post_payload;
 
 #[tokio::main]
@@ -53,11 +55,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let suffix = fs::read(&config.user.suffix_filename).unwrap();
     file.write_all(&suffix).unwrap();
     Ok(())
-}
-
-fn build_auth_string(key_variable: &String) -> String {
-    let api_key = env::var(key_variable).unwrap();
-    let mut auth_string = String::from("Bearer ");
-    auth_string.push_str(&api_key);
-    auth_string
 }

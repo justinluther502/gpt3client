@@ -1,6 +1,6 @@
+use crate::cfg_parser::{ModelConfig, UserConfig};
 use serde_json::{json, Value};
 use std::fs;
-use crate::cfg_parser::{ModelConfig, UserConfig};
 
 pub fn build_post_payload(user_cfg: &UserConfig, model_cfg: &ModelConfig) -> Value {
     let prompt = fs::read_to_string(&user_cfg.prompt_filename).unwrap();
