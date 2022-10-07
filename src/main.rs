@@ -1,28 +1,9 @@
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde_derive::Deserialize;
 use serde_json::{json, Value};
 use std::{env, fs, io::Write};
 
-#[derive(Deserialize)]
-struct Config {
-    model: ModelConfig,
-    user: UserConfig,
-}
-
-#[derive(Deserialize)]
-struct ModelConfig {
-    model: String,
-    temperature: f32,
-    choices: u32,
-    include_suffix: bool,
-}
-
-#[derive(Deserialize)]
-struct UserConfig {
-    api_key_env_var: String,
-    prompt_filename: String,
-    suffix_filename: String,
-}
+mod config;
+use config::{Config, UserConfig, ModelConfig};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
