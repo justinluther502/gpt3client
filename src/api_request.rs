@@ -14,10 +14,7 @@ pub fn send_request(api_key_env_var: &String, post_data: &Value) -> Value {
     let res = client
         .post("https://api.openai.com/v1/completions")
         .header(CONTENT_TYPE, "application/json")
-        .header(
-            AUTHORIZATION,
-            build_auth_string(&api_key),
-        )
+        .header(AUTHORIZATION, build_auth_string(&api_key))
         .json(post_data)
         .send();
 

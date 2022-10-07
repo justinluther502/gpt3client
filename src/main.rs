@@ -10,7 +10,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = cfg_parser::parse_config();
     let post_data = build_post_payload(&config.user, &config.model);
     let resp_body = send_request(&config.user.api_key_env_var, &post_data);
-    
+
     let divider = b"\n___________________________\n";
     for choice in resp_body["choices"].as_array().unwrap() {
         let choice_obj = choice.as_object().unwrap();
