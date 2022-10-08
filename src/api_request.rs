@@ -9,6 +9,8 @@ pub fn build_auth_string(key_variable: &String) -> String {
 }
 
 pub fn send_request(api_key_env_var: &String, post_data: &Value) -> Value {
+    // Send a POST request to the API completions endpoint with a blocking
+    // request.
     let client = reqwest::blocking::Client::new();
     let api_key = env::var(api_key_env_var).unwrap();
     let res = client
@@ -18,11 +20,8 @@ pub fn send_request(api_key_env_var: &String, post_data: &Value) -> Value {
         .json(post_data)
         .send();
 
-    // Receive the API response
+    // Receive the API response and parse into a JSON serde Value struct.
     let res_body = res.unwrap().text().unwrap();
-
-    // Parse the response into a serde json Value struct and write the responses
-    // out to the file.
     let v: Value = serde_json::from_str(&res_body).unwrap();
     v
 }
