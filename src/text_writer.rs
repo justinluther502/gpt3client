@@ -1,7 +1,7 @@
 use serde_json::Value;
 use std::{fs, io::Write};
 
-pub fn ai_write(json_body: &Value, prompt: &String, suffix: &String) {
+pub fn write_resp_choices(json_body: &Value, prompt: &String, suffix: &String) {
     let divider = b"\n___________________________\n";
     for choice in json_body["choices"].as_array().unwrap() {
         let choice_obj = choice.as_object().unwrap();
