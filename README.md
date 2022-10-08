@@ -28,3 +28,9 @@ to build the application, then drop the following 4 files anywhere in the same d
 - writing_helper exectuable
 
 Then enter a prompt in prompt.txt, and an optional suffix. Run the executable, and upon completion, a few choices of GPT-3 generated completions should be inserted into prompt.txt, along with the optional suffix. Pick what you like, and iterate until you have the content you want!
+
+## Compliance
+
+Please refer to the OpenAI Terms of Use. This tool requires using your own API key.
+
+https://openai.com/api/policies/terms/
