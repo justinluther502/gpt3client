@@ -4,7 +4,7 @@ use std::env;
 
 pub fn build_auth_string(key_variable: &String) -> String {
     let mut auth_string = String::from("Bearer ");
-    auth_string.push_str(&key_variable);
+    auth_string.push_str(key_variable);
     auth_string
 }
 

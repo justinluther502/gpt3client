@@ -27,5 +27,5 @@ pub fn write_resp_choices(json_body: &Value, prompt: &String, suffix: &String) {
     file.write_all(divider).unwrap();
     let suffix = fs::read(suffix).unwrap();
     file.write_all(&suffix).unwrap();
-    ()
+    
 }
