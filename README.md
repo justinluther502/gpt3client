@@ -21,7 +21,7 @@ I settled into the following workflow:
 7. Edit the completed content, trimming down the inserted text as necessary.
 8. Repeat 3-7 until I've got a full blog article.
 
-I made this to remove the steps of copy-pasting chunks of text into the OpenAI sandbox, so that I could just work with two text files as I iteratively compose the blog article with GPT-3.
+I made this to remove the steps of copy-pasting chunks of text into the OpenAI sandbox, or into API submission requests, so that I could just work with two text files as I iteratively compose the blog article with GPT-3.
 
 ## Install
 
