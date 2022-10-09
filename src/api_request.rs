@@ -2,7 +2,7 @@ use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use serde_json::Value;
 use std::env;
 
-pub fn build_auth_string(key_variable: &String) -> String {
+pub fn build_auth_string(key_variable: &str) -> String {
     let mut auth_string = String::from("Bearer ");
     auth_string.push_str(key_variable);
     auth_string
