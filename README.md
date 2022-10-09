@@ -6,6 +6,23 @@ This tool requires the user to have their own OpenAI api key stored as an enviro
 
 You are responsible to adhering to OpenAI's Terms of Use (see below).
 
+## Why I made it
+
+I was experimenting with the public API for GPT-3, primarily using it to assist in writing financial blog articles at [Luther Wealth Management](http://www.lutherwealth.com).
+
+I settled into the following workflow:
+
+1. Run a Completions API request with a prompt such as "Write a long blog article about Roth IRA accounts."
+2. Edit the response text.
+3. Choose an insertion point where I want GPT-3 to add some additional content.
+4. Cut everything following the insertion point, which becomes my suffix for the next step.
+5. Append a hint for GPT-3 to the end of the remaining text, such as "Roth IRAs also have several advantages when it comes to inherited investment accounts, such as"
+6. Run the Completions API again, submitting both the prompt and suffix.
+7. Edit the completed content, trimming down the inserted text as necessary.
+8. Repeat 3-7 until I've got a full blog article.
+
+I made this to remove the steps of copy-pasting chunks of text into the OpenAI sandbox, so that I could just work with two text files as I iteratively compose the blog article with GPT-3.
+
 ## Install
 
 ### Binaries
